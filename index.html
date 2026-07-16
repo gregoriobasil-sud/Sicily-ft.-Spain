@@ -94,6 +94,12 @@ h2{font-family:'Fraunces',serif;font-weight:500;font-size:28px;margin-bottom:6px
 .badge.no{background:#F0E2DC;color:#8A4B2E}
 
 footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--line);margin-top:48px}
+.crew{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:24px}
+.pill{font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);transition:transform .15s}
+.pill.win{background:var(--amber);border-color:var(--amber);color:#fff;transform:scale(1.12) rotate(-2deg)}
+.roulette{font-family:inherit;font-size:14px;font-weight:600;padding:8px 18px;border-radius:999px;border:none;background:var(--sea);color:#fff;cursor:pointer;margin-top:14px}
+.roulette:hover{background:var(--sea-deep)}
+.verdict{font-size:14.5px;color:var(--ink-soft);margin-top:10px;min-height:22px;font-style:italic}
 @media(max-width:560px){.stop{grid-template-columns:1fr}.stop time{padding:0}.gig{grid-template-columns:64px 1fr}}
 </style>
 </head>
@@ -101,14 +107,23 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
 
 <header>
   <div class="wrap">
-    <p class="eyebrow">Five friends · based near Noto · 24–30 July 2026</p>
-    <h1>Baroque by golden hour,<br><em>the sea before ten.</em></h1>
-    <p class="sub">Six days across the Val di Noto built around one rule: wild coves early on weekdays, honey-stone towns when the light turns and the crowds thin.</p>
+    <p class="eyebrow">Julia · Mario · Lauri · Albertito · Sito · Greg</p>
+    <h1>Val di Noto<br><em>24–30 July 2026</em></h1>
+    <p class="sub">Beaches in the morning, baroque towns in the evening, granita in between.</p>
+    <div class="crew" id="crew">
+      <span class="pill">🕶 Julia</span>
+      <span class="pill">🍋 Mario</span>
+      <span class="pill">🐙 Lauri</span>
+      <span class="pill">🍫 Albertito</span>
+      <span class="pill">🏛 Sito</span>
+      <span class="pill">🦩 Greg</span>
+    </div>
+    <button class="roulette" id="spin">🍧 Who's buying granita today?</button>
+    <p class="verdict" id="verdict"></p>
     <div class="legend">
       <span><i class="dot b"></i>Beach</span>
       <span><i class="dot c"></i>Culture</span>
       <span><i class="dot n"></i>Nature</span>
-      <span><i class="dot m"></i>Music</span>
       <span><i class="dot" style="background:var(--stone)"></i>Rest</span>
     </div>
   </div>
@@ -120,7 +135,7 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
     <button class="chip" data-f="c">Culture</button>
     <button class="chip" data-f="b">Beach</button>
     <button class="chip" data-f="n">Nature</button>
-    <a class="chip" href="#music" style="text-decoration:none">Music ↓</a>
+    <a class="chip" href="#food" style="text-decoration:none">Food ↓</a>
     <a class="chip" href="#map-sec" style="text-decoration:none">Map ↓</a>
   </div>
 </nav>
@@ -160,21 +175,24 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
       </div>
     </article>
 
-    <article class="day" data-cat="c">
+    <article class="day" data-cat="c b">
       <div class="day-head">
-        <p class="day-date">Sun 26<small>Syracuse and Ortigia</small></p>
-        <div class="tags"><span class="tag c">Culture</span></div>
+        <p class="day-date">Sun 26<small>Syracuse, Ortigia and Plemmirio</small></p>
+        <div class="tags"><span class="tag c">Culture</span><span class="tag b">Beach</span></div>
       </div>
       <div class="photos">
         <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBGhi4zb4A_6qEG57jYxXhve5zjLuXidzFWpj1k0uFuugaDl0KR-EtyEUFP2hTqFVpGk9zlbd3_5iaXlosp2ngk7Bp0knvzrCmHYfL7mz_6ISpE-97tug61Bja8uqQFIzqXNgeoPkQTVY65Ldg3bsbROg=s4800-w800-h600" alt="Greek theatre of Syracuse" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Greek theatre · Google Maps / Franz Stiefvater</figcaption></figure>
         <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjDE23Rf4thsRi5yPnIaRuItyOMIcplq7EMG47qOr5Eyq7qMhQWFWrMvdjFd42H-KaCp_2ojt2zQM34gMflbhWW3a5nuX1AlFkp6rJ4Nkb9TIJWi-DwoxV1oDzy0GgssRakk2qwtHHQst4azJFo=s4800-w800-h600" alt="Ortigia island" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Ortigia · Google Maps / Loris Abbati</figcaption></figure>
       </div>
-      <div class="sunbar" aria-hidden="true"><i class="c" style="width:38%"></i><i class="b" style="width:28%"></i><i class="c" style="width:34%"></i></div>
+      <div class="sunbar" aria-hidden="true"><i class="c" style="width:40%"></i><i class="b" style="width:35%"></i><i class="c" style="width:25%"></i></div>
       <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
       <div class="day-body">
-        <div class="stop"><time>9:00</time><div><h3>Neapolis archaeological park</h3><p>Greek theatre and the Ear of Dionysius at opening. In July the cavea is partly rigged for the play season — the evening shows are the real event (see Music below).</p></div></div>
-        <div class="stop"><time>11:30</time><div><h3>Ortigia</h3><p>Duomo, market lunch (Caseificio Borderi — expect a line), then a midday swim off the Forte Vigliena rocks. Sunset walk on the seafront, dinner in the lanes.</p></div></div>
-        <div class="tip"><span>☀</span><p><b>Sunday logic:</b> beaches are at weekend peak — a city with a rocky swim spot beats fighting for sand today.</p></div>
+        <div class="stop"><time>9:00</time><div><h3>Neapolis archaeological park</h3><p>Greek theatre and the Ear of Dionysius at opening. In July the cavea is partly rigged for the play season — the evening shows are worth tickets if you can grab them.</p></div></div>
+        <div class="stop"><time>11:00</time><div><h3>Ortigia</h3><p>Duomo, the lanes, Fonte Aretusa — a slow loop of the island before lunch.</p></div></div>
+        <div class="stop"><time>13:00</time><div><h3>Lunch at Caseificio Borderi</h3><p>The legendary market sandwich counter: expect a line, it moves, and the wait is part of the show. One sandwich feeds a person and a half.</p></div></div>
+        <div class="stop"><time>15:30</time><div><h3>Plemmirio marine reserve</h3><p>15 min south of Ortigia: swim and snorkel off the rocky coves of Punta della Mola. Crystal-clear protected water — bring water shoes and masks, entry is from the rocks.</p></div></div>
+        <div class="stop"><time>Sunset</time><div><h3>Back through Ortigia</h3><p>Aperitivo on the seafront before the drive home, if there's energy left.</p></div></div>
+        <div class="tip"><span>☀</span><p><b>Sunday logic:</b> sandy beaches are at weekend peak — rocky Plemmirio absorbs a Sunday far better, and the snorkelling is the best in the area.</p></div>
       </div>
     </article>
 
@@ -211,25 +229,28 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
       <div class="day-body">
         <div class="stop"><time>8:00</time><div><h3>Scala Cruci descent</h3><p>~1h steep hike down into the canyon, swim in the chain of natural pools and small waterfalls, climb back out before noon.</p></div></div>
         <div class="stop"><time>Afternoon</time><div><h3>Full rest</h3><p>Shower, nap, pool. Quiet dinner in Noto. No beach today — the climb out is a workout and the legs earned it.</p></div></div>
-        <div class="tip"><span>⛰</span><p><b>Non-negotiables:</b> real sneakers (the trail wrecks sandals) and 2 litres of water each. If a strong scirocco is forecast for Wednesday, swap this day with the beaches.</p></div>
+        <div class="tip"><span>⛰</span><p><b>Non-negotiables:</b> real sneakers (the trail wrecks sandals) and 2 litres of water each. If a strong scirocco hits a beach day, this canyon is the swap — it doesn't care about wind.</p></div>
       </div>
     </article>
 
-    <article class="day" data-cat="b">
+    <article class="day" data-cat="b c">
       <div class="day-head">
-        <p class="day-date">Wed 29<small>Isola delle Correnti and Carratois</small></p>
-        <div class="tags"><span class="tag b">Beach</span></div>
+        <p class="day-date">Wed 29<small>Correnti, Carratois, Scicli and Modica</small></p>
+        <div class="tags"><span class="tag b">Beach</span><span class="tag c">Culture</span></div>
       </div>
       <div class="photos">
         <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBuEbGMWlbH_DrrXQhfY9n5zRCuDi8-rj5zdVqkmpJxsw91vqpP9-v6L67pD3gTziV1to1EUk0lfKmjmLCJV0MX9mCEN4IP9tlhFQsnA8G5vE4tib1tY1UxE9A4IDZP9yoQ4h6zfc-oMYVOJQ=s4800-w800-h600" alt="Isola delle Correnti" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Isola delle Correnti · Google Maps / Antonio Zafonte</figcaption></figure>
         <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjC_nRJVxp-doURKRYMoQm4Y5jmGlSEz5XAhPOhT1-y3hF40U2ttJlI5Y5qzijme3BbZHZp6bkdSIgZBQXPb1VWXBjXi40Ix0bk_i7DTpaySxfKXrAkIOKVWdfsYPWO7DOiY3SqOBQniy5KB=s4800-w800-h600" alt="Carratois beach" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Carratois · Google Maps / Franco Marco Bianchi</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBnhM_F5B3FwXr7-mjTZ1lPpWnl7PBS5_kLG3UYU0EWeDQ6fnaZhKdypWcckhU5dglP4FPVgRRfLZ9C31PACk35RVdNrLJVHOBJ-mCmWbBehipgjCvBGgYEk0KkySltBYfM71Tz2wWH3w1W=s4800-w800-h600" alt="Duomo di San Giorgio, Modica" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Modica · Google Maps / Alessio S. Cuvato</figcaption></figure>
       </div>
-      <div class="sunbar" aria-hidden="true"><i class="b" style="width:40%"></i><i class="b" style="width:45%;opacity:.75"></i><i class="r" style="width:15%"></i></div>
+      <div class="sunbar" aria-hidden="true"><i class="b" style="width:52%"></i><i class="r" style="width:12%"></i><i class="c" style="width:36%"></i></div>
       <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
       <div class="day-body">
-        <div class="stop"><time>9:00</time><div><h3>Isola delle Correnti</h3><p>Sicily's southernmost tip, where the Ionian and the Mediterranean visibly meet. Quiet on a Wednesday; the swim between two seas is the photo of the trip.</p></div></div>
-        <div class="stop"><time>13:00</time><div><h3>Carratois</h3><p>Five minutes up the coast: Caribbean-white sand, seafood lunch with feet in the sand at a lido, lazy afternoon under an umbrella.</p></div></div>
-        <div class="tip"><span>🌬</span><p><b>Wind check:</b> these south-facing beaches turn rough and murky under scirocco. If it blows, swap with the Cavagrande day — the canyon doesn't care about wind.</p></div>
+        <div class="stop"><time>8:30</time><div><h3>Isola delle Correnti</h3><p>Sicily's southernmost tip, where the Ionian and the Mediterranean visibly meet. Quiet on a Wednesday morning; the swim between two seas is the photo of the trip.</p></div></div>
+        <div class="stop"><time>11:30</time><div><h3>Carratois</h3><p>Five minutes up the coast: Caribbean-white sand, seafood lunch with feet in the sand at a lido, umbrella siesta. Fig granita stop in Portopalo on the way out (see Food).</p></div></div>
+        <div class="stop"><time>17:00</time><div><h3>Scicli passeggiata</h3><p>~1h10 drive west: Via Mormino Penna and Palazzo Beneventano in the golden light, plus the town hall that plays Montalbano's police station. An easy, beautiful hour on foot.</p></div></div>
+        <div class="stop"><time>20:00</time><div><h3>Dinner in Modica</h3><p>20 min up the gorge: dinner in the lower town under the floodlit Duomo staircase, chocolate for dessert, then ~50 min home.</p></div></div>
+        <div class="tip warn"><span>🌬</span><p><b>Two notes:</b> this is the big driving day (~2h30 total, split in three easy legs). And if a strong scirocco blows, the south-facing beaches turn rough — swap the morning with the Cavagrande day.</p></div>
       </div>
     </article>
 
@@ -251,51 +272,51 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
   </div>
 </section>
 
-<section id="music">
+<section id="food">
   <div class="wrap">
-    <h2>Live music during your dates</h2>
-    <p class="sec-sub">What's actually on within reach, 24–30 July 2026. Always re-check tickets and times before booking — summer calendars move.</p>
+    <h2>Eat this, there</h2>
+    <p class="sec-sub">One non-negotiable per town — the dish to try and where. Book dinners a day or two ahead in late July.</p>
 
     <div class="gig">
-      <div class="gig-date"><p class="dd">25</p><p class="mm">Sat · 21:00</p></div>
-      <div><h3>Pooh — "Pooh 60, La Nostra Storia" <span class="badge fit">Fits the plan</span></h3>
-      <p class="where">Teatro Greco, Siracusa · ~40 min drive</p>
-      <p>Sixty years of Italian pop history in a 2,400-year-old theatre. Not everyone's genre, but the venue under the stars is worth the ticket on its own. Your Saturday evening is Noto — doable if you trade the corso dinner for an early one.</p></div>
-    </div>
-
-    <div class="gig">
-      <div class="gig-date"><p class="dd">25</p><p class="mm">From Sat</p></div>
-      <div><h3>Noto Musica Festival <span class="badge fit">Zero effort</span></h3>
-      <p class="where">Palazzi and churches of Noto · on your doorstep</p>
-      <p>Classical festival opening 25 July (runs to 19 August) in Noto's baroque palaces. Check the evening programme any night you're in town — a chamber concert inside Palazzo Nicolaci is peak Val di Noto.</p></div>
+      <div class="gig-date"><p class="dd">🍧</p><p class="mm">Noto</p></div>
+      <div><h3>Granita di mandorla con brioche — Caffè Sicilia</h3>
+      <p class="where">Corso Vittorio Emanuele · breakfast, any day you're in town</p>
+      <p>Corrado Assenza's bar is a pilgrimage site: almond granita with warm brioche is the canonical Sicilian breakfast, and this is arguably its best version anywhere. For a proper dinner in Noto, Ristorante Crocifisso is the refined pick in the upper town.</p></div>
     </div>
 
     <div class="gig">
-      <div class="gig-date"><p class="dd">28</p><p class="mm">Tue · 21:00</p></div>
-      <div><h3>Giorgia — G-Summer Tour <span class="badge tight">1h15 drive</span></h3>
-      <p class="where">Villa Bellini, Catania · Sotto il Vulcano Fest</p>
-      <p>The one big pop show in range. Tuesday is your Cavagrande day with a free afternoon — feasible if you're up for the drive back after midnight. Tickets on TicketOne.</p></div>
+      <div class="gig-date"><p class="dd">🐟</p><p class="mm">Marzamemi</p></div>
+      <div><h3>Red tuna and bottarga — La Cialoma</h3>
+      <p class="where">Piazza Regina Margherita · Monday dinner</p>
+      <p>The old tonnara village is tuna country: crudo, tuna steak, pasta with bottarga. La Cialoma on the piazza is the classic — book the outdoor table. Before leaving, stock up on jarred tuna and bottarga at the Campisi shop as edible souvenirs.</p></div>
     </div>
 
     <div class="gig">
-      <div class="gig-date"><p class="dd">30</p><p class="mm">Thu eve</p></div>
-      <div><h3>Carmen Consoli <span class="badge tight">Departure night</span></h3>
-      <p class="where">Siracusa</p>
-      <p>The Catanese cantantessa plays Siracusa the evening you leave. Only works if your departure is late or flexible — otherwise a graceful miss.</p></div>
+      <div class="gig-date"><p class="dd">🥪</p><p class="mm">Ortigia</p></div>
+      <div><h3>The market sandwich — Caseificio Borderi</h3>
+      <p class="where">Mercato di Ortigia · Sunday lunch (already in the plan)</p>
+      <p>Fresh mozzarella stretched in front of you, piled with whatever Damiano decides you need. The line is long and worth it. Next door, Fratelli Burgio does platters of local cheese and salumi if the group splits. Round it off with a glass of chilled Moscato di Siracusa.</p></div>
     </div>
 
-    <div class="gig off">
-      <div class="gig-date"><p class="dd">31</p><p class="mm">Fri →</p></div>
-      <div><h3>Ortigia Music (ex Ortigia Sound System) <span class="badge no">Starts after you leave</span></h3>
-      <p class="where">Ortigia, Siracusa · 31 July – 3 August</p>
-      <p>The Mediterranean's boutique electronic festival — castle stages and boat parties — kicks off the day after your departure. The cruellest near-miss of the week; one to plan around next year.</p></div>
+    <div class="gig">
+      <div class="gig-date"><p class="dd">🌿</p><p class="mm">Portopalo</p></div>
+      <div><h3>Granita di fichi</h3>
+      <p class="where">Bars in the centre · Wednesday, leaving the beach</p>
+      <p>Late July is fig season, and Portopalo's fig granita is a cult local summer thing you won't find on the tourist trail — the perfect salty-skin snack between Carratois and the drive to Scicli. If figs are finished, gelsi (mulberry) is the backup of champions.</p></div>
     </div>
 
-    <div class="gig off">
-      <div class="gig-date"><p class="dd">24</p><p class="mm">Fri</p></div>
-      <div><h3>Claudio Baglioni — GrandTour <span class="badge no">Postponed to 2027</span></h3>
-      <p class="where">Teatro Greco, Siracusa</p>
-      <p>Was scheduled for 23–24 July at the Greek theatre but the whole tour has been postponed to 2027 for health reasons. Listed here so nobody chases ghost tickets.</p></div>
+    <div class="gig">
+      <div class="gig-date"><p class="dd">🥟</p><p class="mm">Scicli</p></div>
+      <div><h3>Scacce ragusane, aperitivo on Via Mormino Penna</h3>
+      <p class="where">Wednesday, golden hour</p>
+      <p>The folded, stuffed flatbread of the Ragusa countryside — tomato and caciocavallo is the benchmark. Grab them from a bakery and eat them on the most beautiful street in town with a spritz before driving up to Modica.</p></div>
+    </div>
+
+    <div class="gig">
+      <div class="gig-date"><p class="dd">🍫</p><p class="mm">Modica</p></div>
+      <div><h3>Cold-worked chocolate — Antica Dolceria Bonajuto</h3>
+      <p class="where">Corso Umberto I · Wednesday after dinner</p>
+      <p>Sicily's oldest chocolate house (1880): grainy, Aztec-style bars in vanilla, cinnamon or chilli, plus the 'mpanatigghi — chocolate-and-meat pastries that sound wrong and taste right. They stay open late in summer, perfect after dinner in the lower town.</p></div>
     </div>
   </div>
 </section>
@@ -311,11 +332,37 @@ footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px s
 
 <footer>
   <div class="wrap">
-    <p>Val di Noto, 24–30 July 2026 · Built for five friends who like their limestone golden and their coves empty.<br>Photos: Google Maps contributors (credited on each image). Event details as announced at time of writing — verify before booking.</p>
+    <p>Val di Noto, 24–30 July 2026 · Julia, Mario, Lauri, Albertito, Sito & Greg — six humans, one rental car, zero regrets planned.<br>Photos: Google Maps contributors (credited on each image). Restaurants and bars change summer hours — book dinners ahead in late July. The granita roulette is final.</p>
   </div>
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var pills = Array.prototype.slice.call(document.querySelectorAll('#crew .pill'));
+var verdicts = [
+  'The tribunal has spoken. No appeals.',
+  'Random, fair, and legally binding.',
+  'The algorithm never lies. Pay up.',
+  'Fate + fichi = destiny.',
+  'Statistically it had to happen.',
+  'The sea has decided.'
+];
+document.getElementById('spin').addEventListener('click', function(){
+  var btn = this; btn.disabled = true;
+  var i = 0, spins = 14 + Math.floor(Math.random()*6);
+  var t = setInterval(function(){
+    pills.forEach(function(p){p.classList.remove('win')});
+    pills[i % pills.length].classList.add('win');
+    i++;
+    if(i > spins){
+      clearInterval(t);
+      var name = pills[(i-1) % pills.length].textContent.trim();
+      document.getElementById('verdict').textContent = name + ' is buying. ' + verdicts[Math.floor(Math.random()*verdicts.length)];
+      btn.disabled = false;
+    }
+  }, 110);
+});
+</script>
 <script>
 document.querySelectorAll('.chip[data-f]').forEach(function(btn){
   btn.addEventListener('click', function(){
@@ -343,10 +390,13 @@ var pts = [
   [36.8338,15.1057,'b','Marianelli','Mon 27 · afternoon'],
   [36.7420,15.1175,'c','Marzamemi','Mon 27 · dinner'],
   [36.9704,15.1001,'n','Cavagrande — natural pools','Tue 28 · 8:00'],
-  [36.6453,15.0776,'b','Isola delle Correnti','Wed 29 · 9:00'],
-  [36.6566,15.0733,'b','Carratois','Wed 29 · 13:00'],
+  [37.0050,15.3020,'b','Plemmirio — Punta della Mola coves','Sun 26 · 15:30'],
+  [36.6453,15.0776,'b','Isola delle Correnti','Wed 29 · 8:30'],
+  [36.6566,15.0733,'b','Carratois','Wed 29 · 11:30'],
+  [36.6820,15.1330,'c','Portopalo — fig granita stop','Wed 29 · leaving the beach'],
+  [36.7905,14.7020,'c','Scicli — Via Mormino Penna','Wed 29 · 17:00'],
+  [36.8639,14.7615,'c','Modica — dinner and Bonajuto chocolate','Wed 29 · 20:00'],
   [36.7986,15.0930,'b','Vendicari reserve','Thu 30 · 8:30'],
-  [37.0700,15.2870,'m','Teatro Greco — Pooh (Sat 25) · Carmen Consoli in town (Thu 30)','Music'],
 ];
 var bounds = [];
 pts.forEach(function(p){
