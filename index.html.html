@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Val di Noto · 24–30 July 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --sand:#F5EFE2; --stone:#E9DFC9; --card:#FDFBF5;
+  --ink:#22303A; --ink-soft:#5C6B74;
+  --sea:#0E7490; --sea-deep:#155E75;
+  --olive:#5F7A38; --olive-deep:#44591F;
+  --plum:#6D4E8E; --plum-deep:#4E3568;
+  --amber:#B97F14; --amber-deep:#8A5D0B;
+  --line:#D8CDB4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{font-family:'Public Sans',system-ui,sans-serif;background:var(--sand);color:var(--ink);line-height:1.65;font-size:16px}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+header{padding:56px 0 36px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(34px,6vw,58px);line-height:1.05;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--sea-deep)}
+.sub{margin-top:16px;font-size:17px;color:var(--ink-soft);max-width:60ch}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;font-size:13.5px;color:var(--ink-soft)}
+.legend span{display:flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.b{background:var(--sea)}.dot.c{background:var(--plum)}.dot.n{background:var(--olive)}.dot.m{background:var(--amber)}
+
+nav.filters{position:sticky;top:0;z-index:500;background:var(--sand);border-bottom:1px solid var(--line);padding:12px 0}
+.filters .wrap{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:inherit;font-size:14px;font-weight:500;padding:7px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--ink-soft)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--sand)}
+.chip:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+
+section{padding:44px 0 8px}
+h2{font-family:'Fraunces',serif;font-weight:500;font-size:28px;margin-bottom:6px}
+.sec-sub{color:var(--ink-soft);font-size:15px;margin-bottom:26px}
+
+.day{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:22px}
+.day.hidden{display:none}
+.day-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:20px 24px 4px}
+.day-date{font-family:'Fraunces',serif;font-size:21px;font-weight:500}
+.day-date small{font-family:'Public Sans';font-size:13px;color:var(--ink-soft);font-weight:400;margin-left:8px}
+.tags{display:flex;gap:6px}
+.tag{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.tag.b{background:#DCEEF3;color:var(--sea-deep)}
+.tag.c{background:#EAE2F2;color:var(--plum-deep)}
+.tag.n{background:#E6EDD8;color:var(--olive-deep)}
+.tag.m{background:#F5E8CB;color:var(--amber-deep)}
+
+.sunbar{display:flex;height:9px;border-radius:999px;overflow:hidden;margin:14px 24px 0;border:1px solid var(--line)}
+.sunbar i{display:block;height:100%}
+.sunbar i.b{background:var(--sea)}.sunbar i.c{background:var(--plum)}.sunbar i.n{background:var(--olive)}.sunbar i.r{background:var(--stone)}
+.sunbar-cap{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin:5px 24px 0;letter-spacing:.04em}
+
+.day-body{padding:16px 24px 22px}
+.stop{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.stop:last-of-type{border-bottom:none}
+.stop time{font-size:13.5px;font-weight:600;color:var(--sea-deep);padding-top:2px}
+.stop h3{font-size:16.5px;font-weight:600;margin-bottom:2px}
+.stop p{font-size:14.5px;color:var(--ink-soft)}
+.tip{display:flex;gap:9px;margin-top:14px;padding:11px 14px;background:var(--sand);border-radius:9px;font-size:13.5px;color:var(--ink-soft)}
+.tip b{color:var(--ink);font-weight:600}
+.warn{background:#F7EAE2;color:#7C4A2D}
+.warn b{color:#7C4A2D}
+
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;padding:0 24px}
+.ph{position:relative;border-radius:9px;overflow:hidden;aspect-ratio:4/3;background:var(--stone)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 9px 6px;font-size:10.5px;color:#fff;background:linear-gradient(transparent,rgba(20,25,30,.75))}
+
+#map{height:480px;border-radius:14px;border:1px solid var(--line);z-index:1}
+.map-note{font-size:13px;color:var(--ink-soft);margin-top:10px}
+
+.gig{display:grid;grid-template-columns:86px 1fr;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:14px}
+.gig-date{text-align:center;border-right:1px solid var(--line);padding-right:16px}
+.gig-date .dd{font-family:'Fraunces',serif;font-size:30px;font-weight:500;line-height:1}
+.gig-date .mm{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.gig h3{font-size:17px;font-weight:600}
+.gig .where{font-size:14px;color:var(--sea-deep);font-weight:500;margin:1px 0 5px}
+.gig p{font-size:14.5px;color:var(--ink-soft)}
+.gig.off{opacity:.62}
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+.badge.fit{background:#E6EDD8;color:var(--olive-deep)}
+.badge.tight{background:#F5E8CB;color:var(--amber-deep)}
+.badge.no{background:#F0E2DC;color:#8A4B2E}
+
+footer{padding:40px 0 56px;color:var(--ink-soft);font-size:13px;border-top:1px solid var(--line);margin-top:48px}
+@media(max-width:560px){.stop{grid-template-columns:1fr}.stop time{padding:0}.gig{grid-template-columns:64px 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Five friends · based near Noto · 24–30 July 2026</p>
+    <h1>Baroque by golden hour,<br><em>the sea before ten.</em></h1>
+    <p class="sub">Six days across the Val di Noto built around one rule: wild coves early on weekdays, honey-stone towns when the light turns and the crowds thin.</p>
+    <div class="legend">
+      <span><i class="dot b"></i>Beach</span>
+      <span><i class="dot c"></i>Culture</span>
+      <span><i class="dot n"></i>Nature</span>
+      <span><i class="dot m"></i>Music</span>
+      <span><i class="dot" style="background:var(--stone)"></i>Rest</span>
+    </div>
+  </div>
+</header>
+
+<nav class="filters" aria-label="Filter days">
+  <div class="wrap">
+    <button class="chip on" data-f="all">All days</button>
+    <button class="chip" data-f="c">Culture</button>
+    <button class="chip" data-f="b">Beach</button>
+    <button class="chip" data-f="n">Nature</button>
+    <a class="chip" href="#music" style="text-decoration:none">Music ↓</a>
+    <a class="chip" href="#map-sec" style="text-decoration:none">Map ↓</a>
+  </div>
+</nav>
+
+<section>
+  <div class="wrap">
+    <h2>Day by day</h2>
+    <p class="sec-sub">Each bar shows how the day splits between morning, midday and evening — the trip's whole logic is beating the heat.</p>
+
+    <article class="day" data-cat="c">
+      <div class="day-head">
+        <p class="day-date">Fri 24<small>Arrival</small></p>
+        <div class="tags"><span class="tag c">Culture</span></div>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="r" style="width:70%"></i><i class="c" style="width:30%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>Evening</time><div><h3>Settle in, first stroll in Noto</h3><p>Dinner and a walk along the illuminated Corso Vittorio Emanuele — the cathedral staircase at night is the trip's opening scene.</p></div></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="b c">
+      <div class="day-head">
+        <p class="day-date">Sat 25<small>San Lorenzo → Noto at golden hour</small></p>
+        <div class="tags"><span class="tag b">Beach</span><span class="tag c">Culture</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBShclvZvj3HGwvv6mjfAHXr_8KhVliVtUfHk-bHLvK8L8Z9X4igQ6am--WWZsXCn6HBk91t7t_BgQhl4vj7WDBDqNCLQXtvlKN8iXoliYzRtaRcUiwZWFXUZpP0otAxUNOiie4nmcGscFz=s4800-w800-h600" alt="San Lorenzo beach" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>San Lorenzo · Google Maps / Gaetano Restivo</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjAMHiodPEe9av9Vyk1EkwkJuF1595k_p7Fy2vQhqrZJcXCIbToGcbNoaX9MMOBAhC1N50jlIjTj_KTfCO7oe-s2tgeq_Z1d0U0z1ZwGVR-7F0WSXqz1PEfWJIdMviXqxmjg6qm045_08oQQTQ=s4800-w800-h600" alt="Noto cathedral" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Noto cathedral · Google Maps / Alessandro Bonelli</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="b" style="width:55%"></i><i class="r" style="width:10%"></i><i class="c" style="width:35%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>10:00</time><div><h3>San Lorenzo beach</h3><p>Turquoise water and fine sand through the hot hours. It's Saturday — book lido sunbeds ahead, free-beach stretches vanish fast.</p></div></div>
+        <div class="stop"><time>17:30</time><div><h3>Noto baroque walk</h3><p>Cathedral (open to 20:00), Via Nicolaci, Palazzo Nicolaci — the limestone glows at this hour. Aperitivo and dinner on the corso.</p></div></div>
+        <div class="tip"><span>☀</span><p><b>Why this order:</b> Noto at July noon is a white furnace; at golden hour it's the best light of the day, minus the heat and the tour groups.</p></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="c">
+      <div class="day-head">
+        <p class="day-date">Sun 26<small>Syracuse and Ortigia</small></p>
+        <div class="tags"><span class="tag c">Culture</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBGhi4zb4A_6qEG57jYxXhve5zjLuXidzFWpj1k0uFuugaDl0KR-EtyEUFP2hTqFVpGk9zlbd3_5iaXlosp2ngk7Bp0knvzrCmHYfL7mz_6ISpE-97tug61Bja8uqQFIzqXNgeoPkQTVY65Ldg3bsbROg=s4800-w800-h600" alt="Greek theatre of Syracuse" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Greek theatre · Google Maps / Franz Stiefvater</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjDE23Rf4thsRi5yPnIaRuItyOMIcplq7EMG47qOr5Eyq7qMhQWFWrMvdjFd42H-KaCp_2ojt2zQM34gMflbhWW3a5nuX1AlFkp6rJ4Nkb9TIJWi-DwoxV1oDzy0GgssRakk2qwtHHQst4azJFo=s4800-w800-h600" alt="Ortigia island" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Ortigia · Google Maps / Loris Abbati</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="c" style="width:38%"></i><i class="b" style="width:28%"></i><i class="c" style="width:34%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>9:00</time><div><h3>Neapolis archaeological park</h3><p>Greek theatre and the Ear of Dionysius at opening. In July the cavea is partly rigged for the play season — the evening shows are the real event (see Music below).</p></div></div>
+        <div class="stop"><time>11:30</time><div><h3>Ortigia</h3><p>Duomo, market lunch (Caseificio Borderi — expect a line), then a midday swim off the Forte Vigliena rocks. Sunset walk on the seafront, dinner in the lanes.</p></div></div>
+        <div class="tip"><span>☀</span><p><b>Sunday logic:</b> beaches are at weekend peak — a city with a rocky swim spot beats fighting for sand today.</p></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="b">
+      <div class="day-head">
+        <p class="day-date">Mon 27<small>Calamosche and Marianelli</small></p>
+        <div class="tags"><span class="tag b">Beach</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjDZgDdySll5s9N4hiGv9slYYgZ6hW4Qx9VHOHCTz_bT2FV485BGNfdl9EITHwT685YW49D6BmlACcBKwKneIur7dI84dC7s-vJmsDo0WSFaVfo6z_AmHfCmPHNb8mpbUW0GOOpzbRCt9co-xQ=s4800-w640-h447" alt="Calamosche beach" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Calamosche · Google Maps / Antonino Coraci</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjCzossiW3jHIAh0O5xIhObmTef7QMkc3PJdUE5B9Mqa6Gi1PS7ZSqnpBG9OAnKpdmoxAAsTu6ja5ZrBpLcJZsZTTsBJRtOtHLSIc8oY-b2psdI4rokN0CoQUyX4WyTFBqCPbkGznAUWavHdLw=s4800-w800-h600" alt="Marianelli beach" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Marianelli · Google Maps / Renato Miceli</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBwyX4AP5nsQZ-7QfoLa_6EbhNNSECr7P2cUL8fGcm19Bv1jOcw4ELTvAl9_sa5xNUKz8-uFQUIz9LBbRmv5fWEgRhp574XPSfWd4oHcr0gBx681PQowbVDAigm9QdrMeSk_gKYl4fLzNTI4cw=s4800-w800-h600" alt="Marzamemi village" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Marzamemi · Google Maps / Anna Cordiali</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="b" style="width:62%"></i><i class="r" style="width:8%"></i><i class="b" style="width:12%"></i><i class="c" style="width:18%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>8:00</time><div><h3>Calamosche at opening</h3><p>The reserve's iconic cove, half empty on a Monday morning. 15–20 min walk from the lot on a rough track; bring lunch and water — there's nothing at the beach.</p></div></div>
+        <div class="stop"><time>14:00</time><div><h3>Marianelli</h3><p>Calamosche's wilder twin, reachable on foot along the coast. Dunes, clear water, no services.</p></div></div>
+        <div class="stop"><time>19:00</time><div><h3>Marzamemi</h3><p>Aperitivo and dinner in Piazza Regina Margherita — the fishing village at its liveliest on a summer evening. Book a table.</p></div></div>
+        <div class="tip warn"><span>⚠</span><p><b>Two honest notes:</b> Marianelli is the area's historic naturist beach (mixed crowd, no obligation). And leave nothing in the car — break-ins reported at the dirt parking lots.</p></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="n">
+      <div class="day-head">
+        <p class="day-date">Tue 28<small>Cavagrande canyon</small></p>
+        <div class="tags"><span class="tag n">Nature</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjCdWFQc4iZfZ8B7ZHUuGc4yYaCo_xpx70U0S8PiK1YuSEIteEnfydDKF6ONTJg7HoDVC7FjpiH4LBd09L3fo_ls6UViJvZiY5WgTNLPPtQZgRDuvzm1SXxQXBUipFtoXDm_xAtU6xuVsveNNg=s4800-w800-h600" alt="Cavagrande natural pools" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Laghetti di Cavagrande · Google Maps / ELS</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="n" style="width:52%"></i><i class="r" style="width:33%"></i><i class="c" style="width:15%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>8:00</time><div><h3>Scala Cruci descent</h3><p>~1h steep hike down into the canyon, swim in the chain of natural pools and small waterfalls, climb back out before noon.</p></div></div>
+        <div class="stop"><time>Afternoon</time><div><h3>Full rest</h3><p>Shower, nap, pool. Quiet dinner in Noto. No beach today — the climb out is a workout and the legs earned it.</p></div></div>
+        <div class="tip"><span>⛰</span><p><b>Non-negotiables:</b> real sneakers (the trail wrecks sandals) and 2 litres of water each. If a strong scirocco is forecast for Wednesday, swap this day with the beaches.</p></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="b">
+      <div class="day-head">
+        <p class="day-date">Wed 29<small>Isola delle Correnti and Carratois</small></p>
+        <div class="tags"><span class="tag b">Beach</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBuEbGMWlbH_DrrXQhfY9n5zRCuDi8-rj5zdVqkmpJxsw91vqpP9-v6L67pD3gTziV1to1EUk0lfKmjmLCJV0MX9mCEN4IP9tlhFQsnA8G5vE4tib1tY1UxE9A4IDZP9yoQ4h6zfc-oMYVOJQ=s4800-w800-h600" alt="Isola delle Correnti" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Isola delle Correnti · Google Maps / Antonio Zafonte</figcaption></figure>
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjC_nRJVxp-doURKRYMoQm4Y5jmGlSEz5XAhPOhT1-y3hF40U2ttJlI5Y5qzijme3BbZHZp6bkdSIgZBQXPb1VWXBjXi40Ix0bk_i7DTpaySxfKXrAkIOKVWdfsYPWO7DOiY3SqOBQniy5KB=s4800-w800-h600" alt="Carratois beach" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Carratois · Google Maps / Franco Marco Bianchi</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="b" style="width:40%"></i><i class="b" style="width:45%;opacity:.75"></i><i class="r" style="width:15%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>9:00</time><div><h3>Isola delle Correnti</h3><p>Sicily's southernmost tip, where the Ionian and the Mediterranean visibly meet. Quiet on a Wednesday; the swim between two seas is the photo of the trip.</p></div></div>
+        <div class="stop"><time>13:00</time><div><h3>Carratois</h3><p>Five minutes up the coast: Caribbean-white sand, seafood lunch with feet in the sand at a lido, lazy afternoon under an umbrella.</p></div></div>
+        <div class="tip"><span>🌬</span><p><b>Wind check:</b> these south-facing beaches turn rough and murky under scirocco. If it blows, swap with the Cavagrande day — the canyon doesn't care about wind.</p></div>
+      </div>
+    </article>
+
+    <article class="day" data-cat="b">
+      <div class="day-head">
+        <p class="day-date">Thu 30<small>Last swim and departure</small></p>
+        <div class="tags"><span class="tag b">Beach</span></div>
+      </div>
+      <div class="photos">
+        <figure class="ph"><img src="https://lh3.googleusercontent.com/place-photos/AG9NLjBjhE78jVfgp2EXFmn6M0ZdNei0qmzTDYnI7PoAxShxsTZJuMVW97EP165HCsdKBY6Tmj7uPqNuukdLUhn6DhQMCBeb4y5_vcNnEfH8dvQApeZ5q3CImYdiei48LZQ4L31jcvFiQRrAMQ3QkQ=s4800-w800-h600" alt="Vendicari nature reserve" loading="lazy" onerror="this.parentElement.style.display='none'"><figcaption>Vendicari · Google Maps / Riserva di Vendicari</figcaption></figure>
+      </div>
+      <div class="sunbar" aria-hidden="true"><i class="b" style="width:45%"></i><i class="r" style="width:40%"></i><i class="c" style="width:15%"></i></div>
+      <p class="sunbar-cap"><span>morning</span><span>midday</span><span>evening</span></p>
+      <div class="day-body">
+        <div class="stop"><time>8:30</time><div><h3>Vendicari reserve</h3><p>Main entrance: boardwalk over the lagoons (flamingos in summer), dunes, the old tonnara, and a nearly empty beach at this hour.</p></div></div>
+        <div class="stop"><time>Afternoon</time><div><h3>Long lunch, pack, one last granita</h3><p>Granita con brioche in Noto as the formal goodbye, then evening departure.</p></div></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="music">
+  <div class="wrap">
+    <h2>Live music during your dates</h2>
+    <p class="sec-sub">What's actually on within reach, 24–30 July 2026. Always re-check tickets and times before booking — summer calendars move.</p>
+
+    <div class="gig">
+      <div class="gig-date"><p class="dd">25</p><p class="mm">Sat · 21:00</p></div>
+      <div><h3>Pooh — "Pooh 60, La Nostra Storia" <span class="badge fit">Fits the plan</span></h3>
+      <p class="where">Teatro Greco, Siracusa · ~40 min drive</p>
+      <p>Sixty years of Italian pop history in a 2,400-year-old theatre. Not everyone's genre, but the venue under the stars is worth the ticket on its own. Your Saturday evening is Noto — doable if you trade the corso dinner for an early one.</p></div>
+    </div>
+
+    <div class="gig">
+      <div class="gig-date"><p class="dd">25</p><p class="mm">From Sat</p></div>
+      <div><h3>Noto Musica Festival <span class="badge fit">Zero effort</span></h3>
+      <p class="where">Palazzi and churches of Noto · on your doorstep</p>
+      <p>Classical festival opening 25 July (runs to 19 August) in Noto's baroque palaces. Check the evening programme any night you're in town — a chamber concert inside Palazzo Nicolaci is peak Val di Noto.</p></div>
+    </div>
+
+    <div class="gig">
+      <div class="gig-date"><p class="dd">28</p><p class="mm">Tue · 21:00</p></div>
+      <div><h3>Giorgia — G-Summer Tour <span class="badge tight">1h15 drive</span></h3>
+      <p class="where">Villa Bellini, Catania · Sotto il Vulcano Fest</p>
+      <p>The one big pop show in range. Tuesday is your Cavagrande day with a free afternoon — feasible if you're up for the drive back after midnight. Tickets on TicketOne.</p></div>
+    </div>
+
+    <div class="gig">
+      <div class="gig-date"><p class="dd">30</p><p class="mm">Thu eve</p></div>
+      <div><h3>Carmen Consoli <span class="badge tight">Departure night</span></h3>
+      <p class="where">Siracusa</p>
+      <p>The Catanese cantantessa plays Siracusa the evening you leave. Only works if your departure is late or flexible — otherwise a graceful miss.</p></div>
+    </div>
+
+    <div class="gig off">
+      <div class="gig-date"><p class="dd">31</p><p class="mm">Fri →</p></div>
+      <div><h3>Ortigia Music (ex Ortigia Sound System) <span class="badge no">Starts after you leave</span></h3>
+      <p class="where">Ortigia, Siracusa · 31 July – 3 August</p>
+      <p>The Mediterranean's boutique electronic festival — castle stages and boat parties — kicks off the day after your departure. The cruellest near-miss of the week; one to plan around next year.</p></div>
+    </div>
+
+    <div class="gig off">
+      <div class="gig-date"><p class="dd">24</p><p class="mm">Fri</p></div>
+      <div><h3>Claudio Baglioni — GrandTour <span class="badge no">Postponed to 2027</span></h3>
+      <p class="where">Teatro Greco, Siracusa</p>
+      <p>Was scheduled for 23–24 July at the Greek theatre but the whole tour has been postponed to 2027 for health reasons. Listed here so nobody chases ghost tickets.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="map-sec">
+  <div class="wrap">
+    <h2>The map</h2>
+    <p class="sec-sub">Every stop, colour-coded. Click a pin for the day and time.</p>
+    <div id="map" role="application" aria-label="Map of trip locations"></div>
+    <p class="map-note">Map data © OpenStreetMap contributors. Requires an internet connection.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Val di Noto, 24–30 July 2026 · Built for five friends who like their limestone golden and their coves empty.<br>Photos: Google Maps contributors (credited on each image). Event details as announced at time of writing — verify before booking.</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+document.querySelectorAll('.chip[data-f]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.chip[data-f]').forEach(function(b){b.classList.remove('on')});
+    btn.classList.add('on');
+    var f = btn.dataset.f;
+    document.querySelectorAll('.day').forEach(function(d){
+      d.classList.toggle('hidden', f !== 'all' && d.dataset.cat.split(' ').indexOf(f) === -1);
+    });
+  });
+});
+
+var map = L.map('map').setView([36.85, 15.12], 10);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+var colors = {b:'#0E7490', c:'#6D4E8E', n:'#5F7A38', m:'#B97F14'};
+var pts = [
+  [36.8915,15.0707,'c','Noto — cathedral and baroque centre','Fri 24 eve · Sat 25 from 17:30'],
+  [36.7558,15.1017,'b','San Lorenzo beach','Sat 25 · 10:00–16:30'],
+  [37.0759,15.2750,'c','Neapolis park — Greek theatre','Sun 26 · 9:00'],
+  [37.0609,15.2941,'c','Ortigia','Sun 26 · 11:30 → sunset'],
+  [36.8244,15.1058,'b','Calamosche','Mon 27 · 8:00'],
+  [36.8338,15.1057,'b','Marianelli','Mon 27 · afternoon'],
+  [36.7420,15.1175,'c','Marzamemi','Mon 27 · dinner'],
+  [36.9704,15.1001,'n','Cavagrande — natural pools','Tue 28 · 8:00'],
+  [36.6453,15.0776,'b','Isola delle Correnti','Wed 29 · 9:00'],
+  [36.6566,15.0733,'b','Carratois','Wed 29 · 13:00'],
+  [36.7986,15.0930,'b','Vendicari reserve','Thu 30 · 8:30'],
+  [37.0700,15.2870,'m','Teatro Greco — Pooh (Sat 25) · Carmen Consoli in town (Thu 30)','Music'],
+];
+var bounds = [];
+pts.forEach(function(p){
+  L.circleMarker([p[0],p[1]], {radius:9, color:'#fff', weight:2, fillColor:colors[p[2]], fillOpacity:1})
+   .addTo(map).bindPopup('<b>'+p[3]+'</b><br>'+p[4]);
+  bounds.push([p[0],p[1]]);
+});
+map.fitBounds(bounds, {padding:[36,36]});
+</script>
+</body>
+</html>
